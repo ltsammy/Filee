@@ -1151,6 +1151,10 @@ internal static class SettingsMigrations
         //      another change takes it first.)
         if (from < 88)
             changed |= LearnExtensions(profiles, out _, ["nupkg", "snupkg", "apks", "xapk", "apkm", "aab"]);
+        // v89: Valve textures (.vtf) learn the images donut; custom claims stay put. (Schema 89 may be renumbered if
+        //      another change takes it first.)
+        if (from < 89)
+            changed |= LearnExtensions(profiles, out _, ["vtf"]);
         return changed;
     }
 
