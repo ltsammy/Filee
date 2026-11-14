@@ -1151,6 +1151,42 @@ internal static class SettingsMigrations
         //      another change takes it first.)
         if (from < 88)
             changed |= LearnExtensions(profiles, out _, ["nupkg", "snupkg", "apks", "xapk", "apkm", "aab"]);
+        // v89: KuGou lyrics (.krc, #1296) learn the subtitles donut; custom claims stay put. (Schema 89 may be renumbered
+        //      if another change takes it first.)
+        if (from < 89)
+            changed |= LearnExtensions(profiles, out _, ["krc"]);
+        // v90: Wisenet WAVE / Nx Witness exports (.nov) learn the video donut; custom claims stay put.
+        if (from < 90)
+            changed |= LearnExtensions(profiles, out _, ["nov"]);
+        // v91: Gerber PCB layers learn the CAD donut; custom claims stay put.
+        if (from < 91)
+            changed |= LearnExtensions(profiles, out _, ["gbr", "ger", "gtl", "gbl", "gto", "gbo", "gts", "gbs", "gtp", "gbp", "gko", "gm1"]);
+        // v92: Obsidian's boards (.canvas, JSON Canvas) learn the vector donut; custom claims stay put.
+        if (from < 92)
+            changed |= LearnExtensions(profiles, out _, ["canvas"]);
+        // v93: G-code toolpaths (.gcode, .gco, .ngc) learn the CAD donut; custom claims stay put.
+        if (from < 93)
+            changed |= LearnExtensions(profiles, out _, ["gcode", "gco", "ngc"]);
+        // v94: Valve textures (.vtf) learn the images donut; custom claims stay put.
+        if (from < 94)
+            changed |= LearnExtensions(profiles, out _, ["vtf"]);
+        // v95: Source engine files: Garry's Mod addons (.gma), Valve paks (.vpk) and maps (.bsp, for the files packed into
+        //      them) learn the archives donut; custom claims stay put. (Schema 95 may be renumbered if another change
+        //      takes it first.)
+        if (from < 95)
+            changed |= LearnExtensions(profiles, out _, ["gma", "vpk", "bsp"]);
+        // v96: "GMA" (packing a folder into a Garry's Mod addon) joins the game packs in the palette, not a donut; the
+        //      game packs the user removed stay removed. (Schema 96 may be renumbered if another change takes it first.)
+        if (from < 96)
+            changed |= AddGma(presets);
+        // v97: Source engine models (.mdl) and studiomdl data (.smd) learn the 3D models donut and "SMD" joins the 3D
+        //      models in the palette after glTF; custom claims stay put. (Schema 97 may be renumbered if another change
+        //      takes it first.)
+        if (from < 97)
+        {
+            changed |= AddSourcePresets(presets);
+            changed |= LearnExtensions(profiles, out _, ["mdl", "smd"]);
+        }
         return changed;
     }
 
@@ -1203,6 +1239,36 @@ internal static class SettingsMigrations
                 continue;
             }
             presets.Insert(at++, preset);
+            changed = true;
+        }
+        return changed;
+    }
+
+    /// <summary>
+    /// "GMA" after the last game pack of the library (else after "TAR", else at the end); the game packs the user removed
+    /// stay removed.
+    /// </summary>
+    private static bool AddGma(List<Preset> presets)
+    {
+        if (presets.Any(p => p.Id == "to-gma"))
+            return false;
+        var packs = BuiltInData.GamePackPresets().Select(p => p.Id).ToHashSet();
+        var at = presets.FindLastIndex(p => packs.Contains(p.Id));
+        if (at < 0)
+            at = presets.FindIndex(p => p.Id == "to-tar");
+        presets.Insert(at < 0 ? presets.Count : at + 1, BuiltInData.GamePackPresets().Single(p => p.Id == "to-gma"));
+        return true;
+    }
+
+    /// <summary>"SMD" after the last 3D model preset of the library (glTF), or at the end.</summary>
+    private static bool AddSourcePresets(List<Preset> presets)
+    {
+        var changed = false;
+        foreach (var preset in BuiltInData.SourceModelPresets().Where(p => presets.All(existing => existing.Id != p.Id)))
+        {
+            var models = BuiltInData.ModelPresets().Select(p => p.Id).ToHashSet();
+            var last = presets.FindLastIndex(p => models.Contains(p.Id));
+            presets.Insert(last < 0 ? presets.Count : last + 1, preset);
             changed = true;
         }
         return changed;

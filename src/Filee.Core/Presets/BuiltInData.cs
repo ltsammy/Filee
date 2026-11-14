@@ -160,6 +160,7 @@ public static class BuiltInData
         .. DataPresets(),
         .. CodecAndSubtitlePresets(),
         .. ModelPresets(),
+        .. SourceModelPresets(),
         .. GeoPresets(),
         .. TracePresets(),
     ];
@@ -226,8 +227,8 @@ public static class BuiltInData
     ];
 
     /// <summary>
-    /// Minecraft packs and Modrinth modpacks (#824, #898, added to the library in settings schema 62): in the palette
-    /// only, after "TAR", in the Games field (off in a new install).
+    /// Minecraft packs and Modrinth modpacks (#824, #898, added to the library in settings schema 62) and Garry's Mod
+    /// addons (#1526, schema 96): in the palette only, after "TAR", in the Games field (off in a new install).
     /// </summary>
     public static List<Preset> GamePackPresets() =>
     [
@@ -236,6 +237,7 @@ public static class BuiltInData
         new() { Id = "to-mcworld", Name = "MCWORLD", TargetFormat = "mcworld" },
         new() { Id = "to-mctemplate", Name = "MCTEMPLATE", TargetFormat = "mctemplate" },
         new() { Id = "to-mrpack", Name = "MRPACK", TargetFormat = "mrpack" },
+        new() { Id = "to-gma", Name = "GMA", TargetFormat = "gma" },
     ];
 
     /// <summary>
@@ -591,6 +593,15 @@ public static class BuiltInData
     ];
 
     /// <summary>
+    /// Studiomdl data for Source engine models (#1526, added to the library in settings schema 97): in the palette only,
+    /// after glTF, in the Games field (off in a new install).
+    /// </summary>
+    public static List<Preset> SourceModelPresets() =>
+    [
+        new() { Id = "to-smd", Name = "SMD", TargetFormat = "smd" },
+    ];
+
+    /// <summary>
     /// Geospatial vector targets (added in settings schema 25, see SettingsMigrations). CSV, the sixth slice of the
     /// donut, is the spreadsheet preset. KMZ is a KML in a ZIP and is on no donut.
     /// </summary>
@@ -658,7 +669,7 @@ public static class BuiltInData
         new()
         {
             Id = RingtoneId, NameKey = "preset.iphone_ringtone", TargetFormat = "m4r",
-            Media = { RingtoneStart = 0, RingtoneLength = MediaOptions.DefaultRingtoneLength },
+            Media = { RingtoneStart = 0, RingtoneLength = MediaOptions.DefaultRingtoneLength, AskRingtonePart = true },
         },
 
         // Archives
