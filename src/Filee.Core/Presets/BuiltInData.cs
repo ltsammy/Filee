@@ -160,6 +160,7 @@ public static class BuiltInData
         .. DataPresets(),
         .. CodecAndSubtitlePresets(),
         .. ModelPresets(),
+        .. SourceModelPresets(),
         .. GeoPresets(),
         .. TracePresets(),
     ];
@@ -589,6 +590,15 @@ public static class BuiltInData
         new() { Id = "to-3mf", Name = "3MF", TargetFormat = "3mf" },
         new() { Id = "to-ply", Name = "PLY", TargetFormat = "ply" },
         new() { Id = "to-gltf", Name = "glTF", TargetFormat = "gltf" },
+    ];
+
+    /// <summary>
+    /// Studiomdl data for Source engine models (#1526, added to the library in settings schema 97): in the palette only,
+    /// after glTF, in the Games field (off in a new install).
+    /// </summary>
+    public static List<Preset> SourceModelPresets() =>
+    [
+        new() { Id = "to-smd", Name = "SMD", TargetFormat = "smd" },
     ];
 
     /// <summary>
