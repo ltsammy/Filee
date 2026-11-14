@@ -1179,6 +1179,10 @@ internal static class SettingsMigrations
         //      game packs the user removed stay removed. (Schema 96 may be renumbered if another change takes it first.)
         if (from < 96)
             changed |= AddGma(presets);
+        // v97: Source engine models (.mdl) learn the 3D models donut; custom claims stay put. (Schema 97 may be renumbered
+        //      if another change takes it first.)
+        if (from < 97)
+            changed |= LearnExtensions(profiles, out _, ["mdl"]);
         return changed;
     }
 
