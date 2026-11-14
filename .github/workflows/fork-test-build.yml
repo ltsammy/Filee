@@ -1,0 +1,35 @@
+# Fork only, not for any PR: a Windows x64 Setup and portable zip of this branch to try it, without the test suite.
+name: Fork test build
+on:
+  push:
+    branches: [ci-source]
+  workflow_dispatch:
+jobs:
+  package:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+      - name: Fonts
+        shell: pwsh
+        run: ./build/fetch-fonts.ps1
+      - name: Restore Zig toolchain
+        uses: actions/cache/restore@v5
+        with:
+          path: build/.cache/zig-x86_64-windows-0.16.0
+          key: zig-0.16.0-x86_64-windows
+      - name: Build Explorer menu extension
+        timeout-minutes: 30
+        shell: pwsh
+        run: ./build/build-explorer-menu.ps1
+      - name: Build package
+        shell: pwsh
+        run: ./build/build-installer.ps1 -Portable
+      - name: Upload package
+        uses: actions/upload-artifact@v7
+        with:
+          name: windows-x64-package
+          path: Releases/*-win-Setup.exe
+          if-no-files-found: error
