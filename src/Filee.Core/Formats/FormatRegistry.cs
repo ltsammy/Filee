@@ -61,12 +61,16 @@ public static class FormatRegistry
         new("fits", "FITS", FormatCategory.Image, ["fits", "fts"], Writable: false),
         // Read on Windows only, with its own codec (HDR screenshots of Windows are JPEG XR).
         new("jxr", "JPEG XR", FormatCategory.Image, ["jxr", "wdp", "hdp"], Writable: false),
-        new("xcf", "XCF", FormatCategory.Image, ["xcf"], Writable: false),
+        // GIMP's own file, read and written by Filee: layers merged for other pictures, kept between XCF, PDN and PSD.
+        new("xcf", "GIMP (XCF)", FormatCategory.Image, ["xcf"]),
         // Krita's own file (#903): a ZIP whose merged picture (mergedimage.png) is read, as Krita shows it. ".kra~" is the
         // backup Krita keeps of the previous save, the same file under another name (#1077).
         new("kra", "Krita (KRA)", FormatCategory.Image, ["kra", "kra~"], Writable: false),
         // Paint.NET's own file, read and written by Filee: layers merged for other pictures, kept between PDN and PSD.
         new("pdn", "Paint.NET (PDN)", FormatCategory.Image, ["pdn"]),
+        // Valve's texture for the Source engine (Garry's Mod, Counter-Strike: Source, Team Fortress 2), read and written by
+        // Filee: DXT1 or DXT5 with every mipmap, the frames of an animated texture.
+        new("vtf", "Valve Texture (VTF)", FormatCategory.Image, ["vtf"]),
         // iPhone Live Photo as one ZIP (iCloud downloads): the photo, or its video with FFmpeg.
         new("livp", "Live Photo (LIVP)", FormatCategory.Image, ["livp"], Writable: false),
         // A Windows program or library (#1188), read as its icon: the picture Explorer shows for the file.
@@ -90,6 +94,9 @@ public static class FormatRegistry
         // Tajima embroidery designs: the stitches drawn as lines (issue #397).
         new("dst", "DST", FormatCategory.Vector, ["dst"], Writable: false),
         new("odg", "ODG", FormatCategory.Vector, ["odg"]),
+        // Obsidian's visual boards (JSON Canvas 1.0): cards, groups and the lines between them, read by Filee itself and
+        // drawn as SVG (then PDF and pictures), or their text as Markdown. A .canvas that isn't one is refused.
+        new("canvas", "Obsidian Canvas", FormatCategory.Vector, ["canvas"], Writable: false),
         new("fodg", "FODG", FormatCategory.Vector, ["fodg"], Writable: false),
 
         // PDF
@@ -258,6 +265,9 @@ public static class FormatRegistry
         // Dahua and similar DVR / NVR recordings (#594): FFmpeg's dhav demuxer reads them (H.264 / H.265 video, often
         // with G.711 or AAC sound).
         new("dav", "DAV", FormatCategory.Video, ["dav"], Writable: false),
+        // Wisenet WAVE / Nx Witness exports: a layout file whose camera recordings are Matroska streams, read by FFmpeg
+        // from inside the file (NovExport). Password-protected exports are encrypted and refused.
+        new("nov", "NOV", FormatCategory.Video, ["nov"], Writable: false),
         // Bink Video, the game cutscene format of RAD Game Tools (#751): FFmpeg's bink demuxer reads it. Never a target.
         new("bik", "BIK", FormatCategory.Video, ["bik"], Writable: false),
         // FLIC, the animations of Autodesk Animator (.fli) and Animator Pro (.flc), also in DOS games and pixel-art tools
@@ -345,6 +355,14 @@ public static class FormatRegistry
         new("mcworld", "Minecraft world", FormatCategory.Archive, ["mcworld"]),
         new("mctemplate", "Minecraft world template", FormatCategory.Archive, ["mctemplate"]),
         new("mrpack", "Modrinth modpack", FormatCategory.Archive, ["mrpack"]),
+        // Garry's Mod addons (Steam Workshop), unpacked by Filee with an addon.json for their title, description, type
+        // and tags.
+        new("gma", "Garry's Mod addon (GMA)", FormatCategory.Archive, ["gma"], Writable: false),
+        // Valve paks (Source engine games' files, "pak01_dir.vpk" with its "pak01_000.vpk" … parts), read by Filee; a PS
+        // Vita package under the same extension is a ZIP and goes to 7-Zip.
+        new("vpk", "Valve pak (VPK)", FormatCategory.Archive, ["vpk"], Writable: false),
+        // Source engine maps: the files packed into a map (its pakfile lump, a ZIP) unpack like an archive.
+        new("bsp", "Source map (BSP)", FormatCategory.Archive, ["bsp"], Writable: false),
         new("cab", "CAB", FormatCategory.Archive, ["cab"], Writable: false),
         new("cpio", "CPIO", FormatCategory.Archive, ["cpio"], Writable: false),
         new("deb", "DEB", FormatCategory.Archive, ["deb"], Writable: false),
@@ -362,6 +380,14 @@ public static class FormatRegistry
         // CAD
         new("dwg", "DWG", FormatCategory.Cad, ["dwg"]),
         new("dxf", "DXF", FormatCategory.Cad, ["dxf"]),
+        // PCB layers (RS-274X / Gerber X2): generic, Protel-style per-layer and board-outline extensions. GIMP brushes
+        // also use .gbr; the reader tells them apart and says so.
+        new("gerber", "Gerber", FormatCategory.Cad,
+            ["gbr", "ger", "gtl", "gbl", "gto", "gbo", "gts", "gbs", "gtp", "gbp", "gko", "gm1"], Writable: false),
+        // Toolpaths of 3D printers (slicers) and CNC machines, read only and drawn as a picture. ".nc" stays out (also
+        // NetCDF, #562, #244), and so do ".tap" (also cassette images) and ".g" (also ANTLR and GAP; RepRapFirmware's
+        // macros seldom have a toolpath).
+        new("gcode", "G-code", FormatCategory.Cad, ["gcode", "gco", "ngc"], Writable: false),
 
         // Fonts
         new("ttf", "TTF", FormatCategory.Font, ["ttf"]),
@@ -378,6 +404,7 @@ public static class FormatRegistry
         new("vtt", "WebVTT", FormatCategory.Subtitle, ["vtt"]),
         new("smi", "SAMI", FormatCategory.Subtitle, ["smi", "sami"]),
         new("lrc", "LRC", FormatCategory.Subtitle, ["lrc"]),
+        new("krc", "KRC", FormatCategory.Subtitle, ["krc"], Writable: false),
         new("ttml", "TTML", FormatCategory.Subtitle, ["ttml", "dfxp"]),
         new("sub", "MicroDVD", FormatCategory.Subtitle, ["sub"]),
         new("scc", "SCC", FormatCategory.Subtitle, ["scc"], Writable: false),

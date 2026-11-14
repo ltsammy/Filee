@@ -1151,6 +1151,30 @@ internal static class SettingsMigrations
         //      another change takes it first.)
         if (from < 88)
             changed |= LearnExtensions(profiles, out _, ["nupkg", "snupkg", "apks", "xapk", "apkm", "aab"]);
+        // v89: KuGou lyrics (.krc, #1296) learn the subtitles donut; custom claims stay put. (Schema 89 may be renumbered
+        //      if another change takes it first.)
+        if (from < 89)
+            changed |= LearnExtensions(profiles, out _, ["krc"]);
+        // v90: Wisenet WAVE / Nx Witness exports (.nov) learn the video donut; custom claims stay put.
+        if (from < 90)
+            changed |= LearnExtensions(profiles, out _, ["nov"]);
+        // v91: Gerber PCB layers learn the CAD donut; custom claims stay put.
+        if (from < 91)
+            changed |= LearnExtensions(profiles, out _, ["gbr", "ger", "gtl", "gbl", "gto", "gbo", "gts", "gbs", "gtp", "gbp", "gko", "gm1"]);
+        // v92: Obsidian's boards (.canvas, JSON Canvas) learn the vector donut; custom claims stay put.
+        if (from < 92)
+            changed |= LearnExtensions(profiles, out _, ["canvas"]);
+        // v93: G-code toolpaths (.gcode, .gco, .ngc) learn the CAD donut; custom claims stay put.
+        if (from < 93)
+            changed |= LearnExtensions(profiles, out _, ["gcode", "gco", "ngc"]);
+        // v94: Valve textures (.vtf) learn the images donut; custom claims stay put.
+        if (from < 94)
+            changed |= LearnExtensions(profiles, out _, ["vtf"]);
+        // v95: Source engine files: Garry's Mod addons (.gma), Valve paks (.vpk) and maps (.bsp, for the files packed into
+        //      them) learn the archives donut; custom claims stay put. (Schema 95 may be renumbered if another change
+        //      takes it first.)
+        if (from < 95)
+            changed |= LearnExtensions(profiles, out _, ["gma", "vpk", "bsp"]);
         return changed;
     }
 
