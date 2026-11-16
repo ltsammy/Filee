@@ -1,0 +1,31 @@
+# Fork only, not for any PR: format check, build and the Source format tests on Windows, without the whole suite.
+name: Fork quick test
+on:
+  push:
+    branches: [ci-decompile]
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+      - name: Restore
+        run: dotnet restore Filee.slnx
+      - name: Check formatting
+        run: dotnet format Filee.slnx --verify-no-changes --no-restore --severity warn
+      - name: Core tests
+        if: always()
+        run: dotnet test tests/Filee.Core.Tests -c Release --filter "FullyQualifiedName~SourceFormat|FullyQualifiedName~FormatFields|FullyQualifiedName~UserDataStore|FullyQualifiedName~TranslatePreset|FullyQualifiedName~BuiltIn|FullyQualifiedName~Preset" --logger "console;verbosity=normal"
+      - name: Engine tests
+        if: always()
+        run: dotnet test tests/Filee.Engines.Tests -c Release --filter "FullyQualifiedName~Source|FullyQualifiedName~Smd|FullyQualifiedName~ForkSample|FullyQualifiedName~Gma|FullyQualifiedName~Vpk|FullyQualifiedName~Bsp|FullyQualifiedName~ModelConverter" --logger "console;verbosity=normal"
+      - name: Show decompiled samples
+        if: always()
+        shell: pwsh
+        run: |
+          Get-ChildItem decompiled -Recurse -File | ForEach-Object { "{0} {1}" -f $_.FullName.Substring($PWD.Path.Length), $_.Length }
+          Get-ChildItem decompiled -Recurse -Filter *.qc | ForEach-Object { "===== $($_.Name)"; Get-Content $_.FullName }
+          Get-ChildItem decompiled -Recurse -Filter *.smd | ForEach-Object { "===== $($_.Name)"; Get-Content $_.FullName -TotalCount 14 }
