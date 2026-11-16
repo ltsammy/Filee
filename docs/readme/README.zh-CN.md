@@ -93,6 +93,7 @@ winget install KnifeLemon.Filee
 ```
 
 - **Windows 10/11** 运行 `Filee-<version>-win-Setup.exe`，或解压 `win-Portable.zip` 后运行 `Filee.exe`。
+  - Windows on ARM 电脑（设置 → 系统 → 系统信息中显示“基于 ARM 的处理器”）请改用 `win-arm64-Setup.exe` 或 `win-arm64-Portable.zip`，它原生运行，不经过 x64 仿真。
   - 安装程序是 Filee 自己的，使用与 Filee 相同的语言，电脑上无需另外安装任何组件。
   - 安装时可以添加资源管理器菜单、登录时启动、`filee` 命令和可选引擎。
   - 静默安装沿用 Inno Setup 的参数（`/VERYSILENT /SUPPRESSMSGBOXES`）。
@@ -142,7 +143,7 @@ Set-ProcessMitigation -Name filee-cli.exe -Disable UserShadowStack
 - **监视文件夹**，放入的文件自动转换。
 - **最近的转换**显示在主页上，每项都有缩略图，可以直接“打开文件”，也可以用“打开方式”换个应用打开。
 - **其他方式** 右键菜单、键盘快捷键、拖放区域和 [`filee` 命令](#命令行)。
-- 浅色和深色主题，可自选强调色和环形工具栏不透明度，支持 English、Español、日本語、한국어、简体中文、繁體中文、Polski、हिन्दी、Русский、العربية（从右到左）、Português (Brasil)、Français、नेपाली、ไทย、Türkçe、Português (Portugal)、Deutsch、Italiano、Bahasa Indonesia、Tiếng Việt。
+- 浅色和深色主题，可自选强调色和环形工具栏不透明度，支持 English、Español、日本語、한국어、简体中文、繁體中文、Polski、हिन्दी、Русский、العربية（从右到左）、Português (Brasil)、Français、नेपाली、ไทย、Türkçe、Português (Portugal)、Deutsch、Italiano、Bahasa Indonesia、Tiếng Việt、বাংলা、فارسی、Монгол。
 
 ## 截图
 

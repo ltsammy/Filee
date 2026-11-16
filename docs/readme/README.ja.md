@@ -93,6 +93,7 @@ winget install KnifeLemon.Filee
 ```
 
 - **Windows 10/11**：`Filee-<version>-win-Setup.exe`を実行するか、`win-Portable.zip`を展開して`Filee.exe`を実行します。
+  - Windows on ARMのPC（設定 → システム → バージョン情報に「ARMベースプロセッサ」と表示）では、代わりに`win-arm64-Setup.exe`または`win-arm64-Portable.zip`を使ってください。x64エミュレーションではなくネイティブで動きます。
   - セットアップはFilee独自のインストーラーで、Fileeと同じ言語で表示され、PCにほかのソフトは必要ありません。
   - エクスプローラーのメニュー、サインイン時の起動、`filee`コマンド、追加の変換エンジンを選べます。
   - サイレントインストールにはInno Setupと同じスイッチ（`/VERYSILENT /SUPPRESSMSGBOXES`）が使えます。
@@ -145,7 +146,7 @@ Set-ProcessMitigation -Name filee-cli.exe -Disable UserShadowStack
 - **ほかの使い方**：右クリックメニュー、キーボードショートカット、ドロップ領域、[`filee`コマンド](#コマンドライン)。
 - ライトテーマとダークテーマ。
   アクセントカラーとドーナツメニューの不透明度も選べます。
-  English、Español、日本語、한국어、简体中文、繁體中文、Polski、हिन्दी、Русский、العربية（右から左へ表示）、Português (Brasil)、Français、नेपाली、ไทย、Türkçe、Português (Portugal)、Deutsch、Italiano、Bahasa Indonesia、Tiếng Việtに対応。
+  English、Español、日本語、한국어、简体中文、繁體中文、Polski、हिन्दी、Русский、العربية（右から左へ表示）、Português (Brasil)、Français、नेपाली、ไทย、Türkçe、Português (Portugal)、Deutsch、Italiano、Bahasa Indonesia、Tiếng Việt、বাংলা、فارسی、Монголに対応。
 
 ## スクリーンショット
 
