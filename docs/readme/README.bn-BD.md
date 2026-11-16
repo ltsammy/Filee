@@ -93,6 +93,7 @@ winget install KnifeLemon.Filee
 ```
 
 - **Windows 10/11**: `Filee-<version>-win-Setup.exe` চালান, অথবা `win-Portable.zip` আনজিপ করে `Filee.exe` চালান।
+  - Windows on ARM পিসিতে (Settings → System → About-এ "ARM-based processor" লেখা থাকে) এর বদলে `win-arm64-Setup.exe` বা `win-arm64-Portable.zip` নিন: এটি x64 ইমুলেশনে নয়, সরাসরি নেটিভভাবে চলে।
   - Setup হলো Filee-র নিজস্ব ইনস্টলার, Filee-র বিভিন্ন ভাষায় উপলব্ধ, এবং কম্পিউটারে অন্য কিছুর প্রয়োজন পড়ে না।
   - এটি Explorer মেনু, সাইন-ইনের সময় স্বয়ংক্রিয় চালু, `filee` কমান্ড এবং ঐচ্ছিক ইঞ্জিনগুলো যোগ করতে পারে।
   - সাইলেন্ট ইনস্টলেশন Inno Setup-এর সুইচগুলো সমর্থন করে (`/VERYSILENT /SUPPRESSMSGBOXES`)।
@@ -145,7 +146,7 @@ Setup-এর ফাইলের নামের ক্ষেত্রেও এ�
   কার্ড টেনে এনে বা Alt+↑ / Alt+↓ চেপে ক্রম ঠিক করুন, মুছে ফেলতে Delete চাপুন, এবং সেই ক্রম অনুযায়ী তালিকার জন্য ডোনাট খুলতে *অ্যাকশন নির্বাচন করুন* চাপুন।
   রূপান্তর শেষ হলে তালিকাটি খালি হয়ে যায়।
 - **ব্যবহারের অন্যান্য উপায়**: রাইট-ক্লিক মেনু, কীবোর্ড শর্টকাট, ড্রপ জোন এবং [`filee` কমান্ড](#কমান্ড-লাইন)।
-- নিজস্ব অ্যাকসেন্ট রঙ এবং ডোনাট স্বচ্ছতাসহ লাইট ও ডার্ক থিম; English, Español, 日本語, 한국어, 简体中文, 繁體中文, Polski, हिन्दी, বাংলা, Русский, العربية (ডান থেকে বাম), Português (Brasil), Français, नेपाली, ไทย, Türkçe, Português (Portugal), Deutsch, Italiano, Bahasa Indonesia এবং Tiếng Việt ভাষায় উপলব্ধ।
+- নিজস্ব অ্যাকসেন্ট রঙ এবং ডোনাট স্বচ্ছতাসহ লাইট ও ডার্ক থিম; English, Español, 日本語, 한국어, 简体中文, 繁體中文, Polski, हिन्दी, বাংলা, Русский, العربية (ডান থেকে বাম), Português (Brasil), Français, नेपाली, ไทย, Türkçe, Português (Portugal), Deutsch, Italiano, Bahasa Indonesia, Tiếng Việt, فارسی এবং Монгол ভাষায় উপলব্ধ।
 
 ## স্ক্রিনশট
 

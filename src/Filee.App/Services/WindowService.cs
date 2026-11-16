@@ -420,22 +420,35 @@ public sealed class WindowService(ILocalizer loc, IServiceProvider services, Mem
     }
 
     /// <summary>
-    /// Opens the "Cut a clip" window on the videos among the files. Each clip is written by an ordinary conversion,
+    /// Opens the "Cut a clip" window on the videos and sounds among the files. Each clip is written by an ordinary conversion,
     /// shown in the toast.
     /// </summary>
-    public void ShowClipWindow(IReadOnlyList<string> files, Preset preset, PixelPoint? near = null)
+    public void ShowClipWindow(IReadOnlyList<string> files, Preset preset, PixelPoint? near = null) =>
+        ShowClipWindow(files, preset, near, ringtone: false);
+
+    /// <summary>
+    /// Opens the "Cut a clip" window on the sounds among the files to choose the part that becomes an iPhone ringtone
+    /// (<see cref="MediaOptions.AskRingtonePart"/>, #1291). Its Save starts an ordinary M4R conversion of that part.
+    /// </summary>
+    public void ShowRingtoneWindow(IReadOnlyList<string> files, Preset preset, PixelPoint? near = null) =>
+        ShowClipWindow(files, preset, near, ringtone: true);
+
+    private void ShowClipWindow(IReadOnlyList<string> files, Preset preset, PixelPoint? near, bool ringtone)
     {
-        var videos = files.Where(f => FormatRegistry.Detect(f)?.Category == FormatCategory.Video).ToList();
+        var catalog = services.GetRequiredService<ConverterCatalog>();
+        var cutters = catalog.CreatePlanner();
+        var videos = files.Where(f => FormatRegistry.Detect(f) is { } format
+            && (ringtone ? format.Category == FormatCategory.Audio
+                : format.Category is FormatCategory.Video or FormatCategory.Audio && ClipTool.CanCut(format.Id, cutters))).ToList();
         if (videos.Count == 0)
             return;
         _clipWindow?.Close();
         var store = services.GetRequiredService<UserDataStore>();
-        var catalog = services.GetRequiredService<ConverterCatalog>();
         var conversions = services.GetRequiredService<ConversionService>();
         var log = services.GetService<ILogger<ClipWindowViewModel>>();
         var vm = new ClipWindowViewModel(videos, preset, loc, store, new FfmpegFrameSource(),
             path => ClipTool.TargetFor(FormatRegistry.Detect(path)?.Id ?? ClipTool.FallbackTarget, catalog.CreatePlanner()),
-            (path, conversion) => conversions.Start([path], conversion), log);
+            (path, conversion) => conversions.Start([path], conversion), log, ringtone);
         var win = new ClipWindow { DataContext = vm };
         win.PositionOnScreen(near);
         win.Closed += (_, _) =>
@@ -838,6 +851,104 @@ public sealed class WindowService(ILocalizer loc, IServiceProvider services, Mem
     }
 
     internal WhatsNewWindow? WhatsNew => _whatsNew;
+
+    private PresetGalleryWindow? _gallery;
+    private GalleryExportWindow? _galleryExport;
+
+    internal GalleryExportWindow? GalleryExport => _galleryExport;
+
+    /// <summary>
+    /// Opens "Export for the gallery" (#1530) with <paramref name="selected"/> ticked; a second call brings the open one
+    /// to the front.
+    /// </summary>
+    public void ShowGalleryExport(Preset? selected)
+    {
+        if (_galleryExport is not null)
+        {
+            _galleryExport.Activate();
+            return;
+        }
+        GalleryExportWindow? window = null;
+        var vm = new GalleryExportViewModel(services.GetRequiredService<UserDataStore>(), loc, selected,
+            async uri =>
+            {
+                if (window is not null)
+                    await window.Launcher.LaunchUriAsync(uri);
+            },
+            async () =>
+            {
+                if (window is null)
+                    return null;
+                var file = await window.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+                {
+                    SuggestedFileName = "preset.json",
+                    DefaultExtension = "json",
+                    FileTypeChoices = [new FilePickerFileType("JSON") { Patterns = ["*.json"] }],
+                });
+                return file?.TryGetLocalPath();
+            });
+        window = new GalleryExportWindow { DataContext = vm };
+        PrepareWindow(window);
+        window.Closed += (_, _) =>
+        {
+            if (_galleryExport == window)
+                _galleryExport = null;
+            trimmer.Request();
+        };
+        _galleryExport = window;
+        if (_main is { IsVisible: true } main && main.WindowState != WindowState.Minimized)
+            window.Show(main);
+        else
+        {
+            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            window.Show();
+        }
+        window.Activate();
+    }
+
+    internal PresetGalleryWindow? Gallery => _gallery;
+
+    /// <summary>
+    /// Opens the preset gallery (#1530), centred on the main window; a second call brings the open one to the front.
+    /// filee.sh is contacted from now until it closes. <paramref name="installed"/> is told after each install.
+    /// </summary>
+    public void ShowPresetGallery(Action<Filee.Core.Gallery.GalleryInstallResult>? installed = null)
+    {
+        if (_gallery is not null)
+        {
+            _gallery.Activate();
+            return;
+        }
+        var client = new PresetGalleryClient();
+        PresetGalleryWindow? window = null;
+        var vm = new PresetGalleryViewModel(client, services.GetRequiredService<UserDataStore>(), loc, PresetGalleryViewModel.CurrentVersion,
+            async uri =>
+            {
+                if (window is not null)
+                    await window.Launcher.LaunchUriAsync(uri);
+            },
+            installed);
+        window = new PresetGalleryWindow { DataContext = vm };
+        PrepareWindow(window);
+        window.Closed += (_, _) =>
+        {
+            if (_gallery == window)
+                _gallery = null;
+            vm.Dispose();
+            client.Dispose();
+            trimmer.Request();
+        };
+        _gallery = window;
+        if (_main is { IsVisible: true } main && main.WindowState != WindowState.Minimized)
+            window.Show(main);
+        else
+        {
+            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            window.Show();
+        }
+        window.Activate();
+        _ = vm.LoadAsync();
+    }
 
     /// <summary>Opens the optional-engine choice (first run); a second call brings the open window to front.</summary>
     /// <summary>

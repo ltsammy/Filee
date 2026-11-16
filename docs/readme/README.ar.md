@@ -95,6 +95,7 @@ winget install KnifeLemon.Filee
 ```
 
 - **Windows 10/11**: شغّل `Filee-<version>-win-Setup.exe`، أو فكّ ضغط `win-Portable.zip` وشغّل `Filee.exe`.
+  - على حاسوب Windows on ARM (تظهر عبارة «معالج يستند إلى ARM» في الإعدادات ← النظام ← حول)، استخدم `win-arm64-Setup.exe` أو `win-arm64-Portable.zip` بدلًا من ذلك: فهو يعمل أصليًا، لا عبر محاكاة x64.
   - برنامج الإعداد خاص بـ Filee، ويعمل بلغات Filee، ولا يحتاج إلى أي شيء آخر على الكمبيوتر.
   - يمكنه إضافة قائمة مستكشف الملفات، والتشغيل عند تسجيل الدخول، والأمر `filee`، والمحركات الاختيارية.
   - وتقبل عمليات التثبيت الصامت مفاتيح Inno Setup نفسها (`/VERYSILENT /SUPPRESSMSGBOXES`).
@@ -148,7 +149,7 @@ Set-ProcessMitigation -Name filee-cli.exe -Disable UserShadowStack
 - **مراقبة المجلدات**: يُحوَّل كل ملف يصل إلى المجلد المراقَب.
 - **التحويلات الأخيرة** في الصفحة الرئيسية، لكل نتيجة صورة مصغّرة: افتح الملف، أو افتحه باستخدام تطبيق آخر.
 - **طرق أخرى**: قائمة النقر بالزر الأيمن، واختصار لوحة المفاتيح، ومنطقة الإفلات، و[الأمر `filee`](#سطر-الأوامر).
-- مظهر فاتح وداكن، باللون المميّز وشفافية الشريط الدائري اللذين تختارهما، وباللغات: English · Español · 日本語 · 한국어 · 简体中文 · 繁體中文 · Polski · हिन्दी · Русский · العربية (من اليمين إلى اليسار) · Português (Brasil) · Français · नेपाली · ไทย · Türkçe · Português (Portugal) · Deutsch · Italiano · Bahasa Indonesia · Tiếng Việt.
+- مظهر فاتح وداكن، باللون المميّز وشفافية الشريط الدائري اللذين تختارهما، وباللغات: English · Español · 日本語 · 한국어 · 简体中文 · 繁體中文 · Polski · हिन्दी · Русский · العربية (من اليمين إلى اليسار) · Português (Brasil) · Français · नेपाली · ไทย · Türkçe · Português (Portugal) · Deutsch · Italiano · Bahasa Indonesia · Tiếng Việt · বাংলা · فارسی · Монгол.
 
 ## لقطات الشاشة
 
